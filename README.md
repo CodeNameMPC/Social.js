@@ -32,7 +32,7 @@ JWT_SECRET = "JWT SECRET TOKEN"
 6. Hook your front-end up to the backend and start using! 
 
 ## TODO
-- [ ]Documentation
+- [ ] Documentation
 - [ ] Posts
   - [ ] Create a Post
   - [ ] Retreive A Post
