@@ -52,8 +52,8 @@ A list of resources that have helped me create this project
   - [ ] Follow Users
   - [ ] Unfollow Users
   - [ ] Profile Information
-    - [ ] Biography
-    - [ ] Website
+    - [X] Biography
+    - [X] Website
     - [ ] Picture
     - [ ] Verified
 - [ ] Database
