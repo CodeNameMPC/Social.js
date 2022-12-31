@@ -1,15 +1,16 @@
 import mongoose from 'mongoose'
 
 const userSchema = mongoose.Schema({
-    _id: Number,
-    _type: String,
-    userName: String,
-    image: String,
-    biography: String,
-    website: String,
-    verified: Boolean,
-    followers: [{type: String}],
-    following: [{type: String}]
+    _id: {type: String, required: true},
+    name: {type: String, required: true},
+    image: {type: String, required: true},
+    biography: {type: String, required: false},
+    website: {type: String, required: false},
+    verified: {type: Boolean, required: false},
+    // followers: [{type: String}],
+    // following: [{type: String}],
+    profileType: {type: String, required: true},
+    password: {type: String, required: true}
 })
 
 const User = mongoose.model('User', userSchema)

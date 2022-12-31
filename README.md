@@ -31,6 +31,10 @@ JWT_SECRET = "JWT SECRET TOKEN"
 
 6. Hook your front-end up to the backend and start using! 
 
+## Resources
+A list of resources that have helped me create this project
+* [Build and Deploy a Full Stack MERN Social Media App with Auth, Pagination, Comments | MERN Course](https://www.youtube.com/watch?v=VsUzmlZfYNg)
+
 ## TODO
 - [ ] Documentation
 - [ ] Posts
@@ -47,9 +51,15 @@ JWT_SECRET = "JWT SECRET TOKEN"
   - [x] User Sign in 
   - [ ] Follow Users
   - [ ] Unfollow Users
+  - [ ] Profile Information
+    - [ ] Biography
+    - [ ] Website
+    - [ ] Picture
+    - [ ] Verified
 - [ ] Database
   - [ ] Model Creation
   - [ ] Large Media Upload (GridFS)
   - [ ] Implement other DB types
     - [ ] MySQL
     - [ ] Sql Lite
+- [ ] Error Handling

@@ -1,10 +1,12 @@
 import express from 'express'
 
-import {createOrGet, getUserByID } from '../controllers/user.js';
+import {create, update, login, getUserByID } from '../controllers/user.js';
 
 const router = express.Router()
 
-router.post('/createOrGet', createOrGet)
-router.get("/findById/:id", getUserByID)
+router.post('/create', create)
+router.post('/update', update)
+router.post('/login', emailLogin)
+router.get("/:id", getUserByID)
 
 export default router;
