@@ -39,14 +39,10 @@ A list of resources that have helped me create this project
 ## TODO
 - [ ] Documentation
 - [ ] Posts
-  - [ ] Create a Post
+  - [x] Create a Post
   - [ ] Retreive A Post
   - [ ] Retrieve posts based on users following list
   - [ ] Media Attachment
-  - [ ] Embedded Items
-    - [ ] URLs
-    - [ ] Tags 
-    - [ ] Users
 - [ ] Users
   - [x] Create Sign up
   - [x] User Sign in 
@@ -65,4 +61,4 @@ A list of resources that have helped me create this project
     - [ ] Sql Lite
 - [ ] Error Handling
 - [ ] OAuth
-- [ ]Unit Tests
+- [ ] Unit Tests
