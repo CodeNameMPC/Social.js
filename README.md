@@ -1,5 +1,5 @@
 # Social.js
-A social media backend framework
+A social media backend server framework
 
 
 ## Background
@@ -14,7 +14,7 @@ Please note that this is still very early stages and sloppy
 2. Run the following command to install needed depedencies
 
 ```
-$npm install
+$ npm install
 ```
 
 3. Start up a mongoDB database instance
@@ -34,6 +34,7 @@ JWT_SECRET = "JWT SECRET TOKEN"
 ## Resources
 A list of resources that have helped me create this project
 * [Build and Deploy a Full Stack MERN Social Media App with Auth, Pagination, Comments | MERN Course](https://www.youtube.com/watch?v=VsUzmlZfYNg)
+* [Implementing an OAuth Server With Node.js and Express](https://thecodebarbarian.com/oauth-with-node-js-and-express.html)
 
 ## TODO
 - [ ] Documentation
@@ -63,3 +64,5 @@ A list of resources that have helped me create this project
     - [ ] MySQL
     - [ ] Sql Lite
 - [ ] Error Handling
+- [ ] OAuth
+- [ ]Unit Tests

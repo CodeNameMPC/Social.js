@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import User from "../models/user.js";
 import express from "express";
+import { USER_NOT_FOUND, PASSWORDS_INCORRECT, PASSWORDS_NOT_MATCH, USER_EXISTS } from "../constants/errorCodes.js";
+import { IUser } from "../types/user.js";
 
 dotenv.config();
 
@@ -18,33 +20,27 @@ export const create = async (req, res, next) => {
       email,
       password,
       confirmedPassword,
-    }: {
-      _id?: string;
-      loginType: string;
-      name: string;
-      image: string;
-      biography: string;
-      website: string;
-      email: string;
-      password?: string;
-      confirmedPassword?: string;
-    } = req.body;
+    }: IUser= req.body;
 
     let userData = {};
     let existingUser;
 
-    // if we are creating via email, we will need to generate an id. we will get the user id from google for google creation
+    // if we are creating via email, we will need to generate an id. we will get the user id from the other source for other logins
+    // if the loginType is EMAIL, then the username/password combination is unique to this site.
+    // if the loginType != EMAIL, then this login is done via a 3rd party (Google, Facebook, Twitter, Github, etc) using their auth,
+    // we just create a profile based off that
     if (loginType.toUpperCase() == "EMAIL") {
       existingUser = User.findOne({ email: email });
       if (existingUser)
         return res
           .status(400)
-          .json({ message: "A user with that email already exists" });
+          .json({ message: USER_EXISTS });
 
       if (password === confirmedPassword)
-        return res.status(400).json({ message: "Passwords do not match." });
+        return res.status(400).json({ message: PASSWORDS_NOT_MATCH });
 
-      const hashedPassword = await bcrypt.hash(password, 12);
+      // TODO: Look into BCRYPT more. I don't think this is the best way to do this
+      const hashedPassword = await bcrypt.hash(String(password), 12);
 
       userData = {
         name,
@@ -54,11 +50,13 @@ export const create = async (req, res, next) => {
         password: hashedPassword,
         profileType: loginType,
       };
-    } else if (loginType.toUpperCase() == "GOOGLE") {
-      existingUser = User.findOne({ email: email });
+    } else { 
+      // There was code to see if it was just google. However, not that I think about it, it can be any website login other than an email/password (github, twitter, facebook, anything)
+      // I also realized that searching just be email here is probably a bad idea, let's search by eMail, login type, AND ID Instead
+      existingUser = User.findById({_id, email, loginType});
       if (existingUser)
         return res.status(400).json({
-          message: "A user associated with that Google account already exists",
+          message: USER_EXISTS,
         });
 
       userData = {
@@ -69,11 +67,7 @@ export const create = async (req, res, next) => {
         website,
         profileType: loginType,
       };
-    } else {
-      return res
-        .status(500)
-        .json({ message: `ERROR. Unknown login type ${loginType}` });
-    }
+    } 
 
     const user = User.create(userData);
 
@@ -90,38 +84,36 @@ export const login = async (req, res, next) => {
       password,
       loginType,
       _id,
-    }: { email?: string; password?: string; loginType: string; _id?: string } =
+    }: IUser =
       req.body;
 
     let existingUser;
 
-    if (loginType.toUpperCase() == "GOOGLE")
-      existingUser = await User.findOne({ _id });
-    else if (loginType.toUpperCase() == "EMAIL")
-      existingUser = await User.findOne({ email });
-    else
-      return res
-        .status(500)
-        .json({ message: `ERROR. Unknown login type ${loginType}` });
+    if (loginType.toUpperCase() == "EMAIL")
+      existingUser = await User.findOne({ email });  
+    else 
+      existingUser = User.findById({_id, email, loginType});
 
     if (!existingUser)
-      res.status(404).json({ message: "user does not exist with that email" });
+      res.status(404).json({ message: USER_NOT_FOUND });
 
     if (loginType.toUpperCase() == "EMAIL") {
+      // I know this is ugly but if you go in via OTHER login, a password won't be provided 
+      // but bcrypt.compare does not like a possible undefined variable even though technically it wont be here
       const isPasswordCorrect = await bcrypt.compare(
-        password,
+        String(password), 
         existingUser.password
       );
 
       if (!isPasswordCorrect)
         return res
           .status(400)
-          .json({ message: `ERROR. Unknown login type ${loginType}` });
+          .json({ message: PASSWORDS_INCORRECT });
     }
 
     const token = jwt.sign(
       { email: existingUser.email, id: existingUser._id },
-      process.env.JWT_SECRET
+      String(process.env.JWT_SECRET)
     );
 
     res.status(200).json({ result: existingUser, token });
@@ -138,14 +130,7 @@ export const update = async (req, res, next) => {
       image,
       biography,
       website,
-    }: {
-      _id: string;
-      _type: string;
-      name: string;
-      image?: string;
-      biography?: string;
-      website?: string;
-    } = req.body;
+    }: IUser = req.body;
 
     const user = await User.updateOne(
       { _id },
@@ -164,12 +149,12 @@ export const update = async (req, res, next) => {
 };
 
 export const getUserByID = async (req, res, next) => {
-  const { id } = req.params;
+  const { _id } = req.body;
 
   try {
-    const result = await User.findById(id);
+    const result = await User.findById(_id);
 
-    if (!result) res.status(400).json({ message: "User not found" });
+    if (!result) res.status(400).json({ message:  USER_NOT_FOUND});
 
     res.status(200).json(result);
   } catch (error) {

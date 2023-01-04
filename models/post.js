@@ -1,17 +1,20 @@
 import mongoose from 'mongoose'
-import Comment from './comment.js'
-import file from './file.js'
-import User from './user.js'
 
 const postSchema = mongoose.Schema({
-    caption: String,
     message: String,
     topic: String,
+    comments: {
+        createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'users'},
+        comment: String,
+    }[[]],
+    likes: {type: mongoose.Schema.Types.ObjectId[[]], ref: 'users'},
     createdAt: {
         type: Date,
         default: Date()
     },
-    createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'users'}
+    createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'users'},
+    media: {type: mongoose.Schema.Types.ObjectId[[]], ref: 'media.files'},
+    parentPost: {type: mongoose.Schema.Types.ObjectId, ref: 'posts'}
 })
 
 const PostMessage = mongoose.model('Post', postSchema)

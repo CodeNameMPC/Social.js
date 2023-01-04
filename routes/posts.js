@@ -1,46 +1,30 @@
-import express from 'express'
-import { getAllPosts, createPost, uploadMedia } from '../controllers/posts'
-import auth from '../middleware/auth.js'
+import express from "express";
+import {
+  getAllPosts,
+  createPost,
+  getPostsByUser,
+  getPostsForUsersFollowers,
+  editPost,
+  likePost,
+  commentOnPost,
+  deletePost,
+  getPostByID,
+  getPostsBySearchQuery,
+  sharePost
+} from "../controllers/posts";
+import auth from "../middleware/auth.js";
 
-import Grid from 'gridfs-stream'
-import {GridFsStorage} from 'multer-gridfs-storage'
-import multer from 'multer'
-import crypto from 'crypto'
-import path from 'path';
+const router = express.Router();
 
-const router = express.Router()
-
-
-
-var storage = new GridFsStorage({
-  url: process.env.CONNECTION_URL,
-  file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        const filename = buf.toString("hex") + path.extname(file.originalname);
-        const fileInfo = {
-          filename: filename,
-          bucketName: "uploads",
-        };
-        resolve(fileInfo);
-      });
-    });
-  },
-});
-const upload = multer({ storage });
-
-//router.get('/search', getPostsBySearch)
-router.get('/getAll', getAllPosts)
-router.post('/', auth, createPost)
-router.post('/media/upload', upload.single('file'), uploadMedia)
-// router.patch('/:id', auth, updatePost)
-// router.delete('/:id', auth, deletePost)
-// router.patch('/:id/likePost', auth, likePost)
-//router.get('/:id', getPost)
-// router.post('/:id/commentPost', auth, commentPost)
-// router.post('/:id/comments', getComments)
+router.get("/search/:query", getPostsBySearchQuery);
+router.post("/newPost", auth, createPost);
+router.get("/byUser/:id", getPostsByUser);
+router.get("/byUserFollowers/:id", getPostsForUsersFollowers);
+router.patch("/:id", editPost);
+router.delete("/:id", deletePost);
+router.patch("/:id/likePost", likePost);
+router.get("/:id", getPostByID);
+router.post("/:id/commentPost", commentOnPost);
+router.post("/:id/share", sharePost)
 
 export default router;
