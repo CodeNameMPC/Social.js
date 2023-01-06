@@ -3,10 +3,7 @@ import mongoose from 'mongoose'
 const postSchema = mongoose.Schema({
     message: String,
     topic: String,
-    comments: {
-        createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'users'},
-        comment: String,
-    }[[]],
+    comments: {type: mongoose.Schema.Types.ObjectId[[]], ref: 'comment'},
     likes: {type: mongoose.Schema.Types.ObjectId[[]], ref: 'users'},
     createdAt: {
         type: Date,

@@ -43,6 +43,10 @@ A list of resources that have helped me create this project
   - [ ] Retreive A Post
   - [ ] Retrieve posts based on users following list
   - [ ] Media Attachment
+  - [ ] Comments
+    - [ ] Post
+    - [ ] Like
+    - [ ] Reply
 - [ ] Users
   - [x] Create Sign up
   - [x] User Sign in 

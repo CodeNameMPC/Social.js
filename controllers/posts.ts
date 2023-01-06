@@ -2,7 +2,7 @@ import Post from "../models/post.js";
 import mongoose from "mongoose";
 import { IPost } from "../types/post.js";
 import {
-  POST_DELETED_SUCESS,
+  POST_DELETED_SUCCESS,
   POST_NOT_FOUND,
   SEARCH_POSTS_NOT_FOUND,
   USER_POSTS_NOT_FOUND,
@@ -83,7 +83,7 @@ export const deletePost = async (req, res) => {
 
     await Post.findByIdAndRemove(id);
 
-    res.json({ message: POST_DELETED_SUCESS });
+    res.json({ message: POST_DELETED_SUCCESS });
   } catch (error) {
     req.status(500).json({ message: error.message });
   }
@@ -109,30 +109,6 @@ export const likePost = async (req, res) => {
   }
 };
 
-export const commentOnPost = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const {comment} = req.body
-
-    const foundPost = await Post.findById(id);
-
-    if (!foundPost) return res.status(404).send(POST_NOT_FOUND);
-
-    const updatedPost = await Post.findByIdAndUpdate(
-      id,
-      { $push: { comments: {
-        createdBy: comment.createdBy,
-        comment: comment.comment
-      } } },
-      { new: true }
-    );
-
-    res.status(200).json(updatedPost);
-    
-  } catch (error) {
-    req.status(500).json({ message: error.message });
-  }
-};
 
 export const getPostByID = async (req, res) => {
   try {
